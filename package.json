@@ -26,5 +26,7 @@
   "engines": {
     "node": "8.11.4"
   },
-  "start": "node main.js"
+  "scripts":{
+    "start": "node main.js"
+  }
 }
