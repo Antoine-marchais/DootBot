@@ -3,7 +3,7 @@
 const express = require("express");
 const PORT = process.env.PORT;
 const app = express();
-const count = 0;
+let count = 0;
 
 app.get("/",function(req,res){
     res.setHeader('Content-Type','text/plain');
