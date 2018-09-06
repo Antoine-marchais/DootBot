@@ -8,8 +8,14 @@ let count = 0;
 app.get("/",function(req,res){
     res.setHeader('Content-Type','text/plain');
     res.status(200);
-    count += 1;
     res.send('ce bot a reçu '+count+' messages depuis son build');
+});
+
+app.post("/",function(req,res){
+    res.setHeader('Content-Type','text/plain');
+    count += 1;
+    res.status(200);
+    res.send('ok');
 });
 
 app.listen(PORT);
