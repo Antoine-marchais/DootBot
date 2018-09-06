@@ -3,10 +3,12 @@
 const express = require("express");
 const PORT = process.env.PORT;
 const app = express();
+const count = 0;
 
 app.get("/",function(req,res){
     res.setHeader('Content-Type','text/plain');
-    res.send('ceci est la réponse')
+    count += 1;
+    res.send('ce bot a reçu '+count+' messages depuis son build');
 });
 
 app.listen(PORT);
