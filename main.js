@@ -23,7 +23,7 @@ app.post("/",function(req,res){
     const id = JSON.parse(req).message.chat.id;
     const doot = 'd'+count*'o'+'t';
     const message = Message(id,doot); 
-    request('https://api.telegram.org/bot'+token+'/sendMessage',{json : message});
+    request.post('https://api.telegram.org/bot'+token+'/sendMessage',{json : message});
     res.status(200);
     res.send('ok');
 });
