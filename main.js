@@ -30,7 +30,11 @@ app.post("/",function(req,res){
         json: true,
         body: message
     };
-    request.post(options,function(err,res,body){console.log(res.statusCode);});
+    request.post(options,function(err,res,body){
+        if (request.statusCode >= 300) {
+            console.log(body);
+        }
+    });
     res.status(200);
     res.send('ok');
 });
