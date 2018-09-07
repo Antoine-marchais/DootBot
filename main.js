@@ -24,7 +24,7 @@ app.post("/",function(req,res){
     res.status(200);
     count += 1;
     fs.writeFile("./update.json",req.body,"utf-8",function(){console.log("file was written");});
-    const id = req.body.result[0].message.chat.id;
+    console.log(req.body);
     const doot = 'd'+count*'o'+'t';
     const message = Message(id,doot); 
     const options = {
