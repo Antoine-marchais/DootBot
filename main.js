@@ -9,7 +9,7 @@ let count = 0;
 function Message(chat_id,text){
     this.chat_id = chat_id;
     this.text = text;
-}
+};
 
 app.get("/",function(req,res){
     res.setHeader('Content-Type','text/plain');
@@ -20,7 +20,10 @@ app.get("/",function(req,res){
 app.post("/",function(req,res){
     res.setHeader('Content-Type','text/plain');
     count += 1;
-    request('https://api.telegram.org/bot'+token+'/sendMessage',)
+    const id = JSON.parse(req).message.chat.id;
+    const doot = 'd'+count*'o'+'t';
+    const message = Message(id,doot); 
+    request('https://api.telegram.org/bot'+token+'/sendMessage',{json : message});
     res.status(200);
     res.send('ok');
 });
