@@ -20,7 +20,7 @@ app.get("/",function(req,res){
 app.post("/",function(req,res){
     res.setHeader('Content-Type','text/plain');
     count += 1;
-    const id = req.message.chat.id;
+    const id = req.result[0].message.chat.id;
     const doot = 'd'+count*'o'+'t';
     const message = Message(id,doot); 
     request.post('https://api.telegram.org/bot'+token+'/sendMessage',{json : message});
