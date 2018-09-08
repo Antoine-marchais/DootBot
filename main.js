@@ -31,6 +31,7 @@ app.post("/",function(req,res){
         body: message
     };
     console.log(options);
+    console.log(message);
     request.post(options,function(err,res,body){
         if (request.statusCode >= 300) {
             console.log(err);
