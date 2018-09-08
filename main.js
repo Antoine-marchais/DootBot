@@ -5,12 +5,24 @@ const request = require("request");
 const bodyParser = require('body-parser');
 const PORT = process.env.PORT;
 const app = express();
-let count = 0;
+let count = 1;
 
 app.use(bodyParser.json());
+
 function Message(chat_id,text){
     this.chat_id = chat_id;
     this.text = text;
+};
+
+const doot = function(){
+    count += 1;
+    let doot = "";
+    doot += "d";
+    for(var i =0;i<count;i+=1){
+        doot += "o";
+    };
+    doot += "t";
+    return doot;
 };
 
 app.get("/",function(req,res){
@@ -23,8 +35,7 @@ app.post("/",function(req,res){
     res.status(200);
     count += 1;
     const id = req.body.message.chat.id;
-    const doot = 'd'+count*'o'+'t';
-    const message = new Message(id,doot); 
+    const message = new Message(id,doot()); 
     const options = {
         url: 'https://api.telegram.org/bot'+token+'/sendMessage',
         json: true,
