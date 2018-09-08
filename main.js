@@ -33,7 +33,6 @@ app.get("/",function(req,res){
 
 app.post("/",function(req,res){
     res.status(200);
-    count += 1;
     const id = req.body.message.chat.id;
     const message = new Message(id,doot()); 
     const options = {
