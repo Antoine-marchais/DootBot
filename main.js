@@ -24,7 +24,7 @@ app.post("/",function(req,res){
     count += 1;
     const id = req.body.message.chat.id;
     const doot = 'd'+count*'o'+'t';
-    const message = Message(id,doot); 
+    const message = new Message(id,doot); 
     const options = {
         url: 'https://api.telegram.org/bot'+token+'/sendMessage',
         json: true,
