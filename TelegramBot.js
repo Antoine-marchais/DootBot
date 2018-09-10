@@ -9,7 +9,7 @@ function Message(chat_id,text){
 };
 
 function Bot(token,route){
-    this.url = url;
+    this.route = route;
     this.token = token;
     this.app = express();
     this.app.use(bodyParser.json());
@@ -37,5 +37,5 @@ function Bot(token,route){
 }
 
 exports.createBot = function(token,route){
-    return Bot(token,route);
+    return new Bot(token,route);
 }
