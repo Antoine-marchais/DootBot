@@ -17,8 +17,9 @@ function Bot(token,route){
     //adding events methods
     this.getMessage = function(callback){
         this.app.post(route,function(req,res){
-            const message = req.body.message;
+            const message = req.body.result[0].message;
             res.status(200);
+            res.send('ok');
             callback(message);
         });
     };
