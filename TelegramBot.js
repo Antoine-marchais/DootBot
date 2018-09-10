@@ -15,7 +15,7 @@ function Bot(token,route){
     this.app.use(bodyParser.json());
     this.app.listen(PORT);
     //adding events methods
-    this.getMessage() = function(callback){
+    this.getMessage = function(callback){
         this.app.post(route,function(req,res){
             const message = req.body.message;
             res.status(200);
@@ -34,4 +34,8 @@ function Bot(token,route){
             console.log("message send");
         });
     }
+}
+
+exports.createBot = function(token,route){
+    return Bot(token,route);
 }
