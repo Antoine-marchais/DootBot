@@ -13,12 +13,11 @@ function Bot(token,route){
     this.token = token;
     this.app = express();
     this.app.use(bodyParser.json());
-    this.app.listen(PORT);
+    this.app.listen(8080);
     //adding events methods
     this.getMessage = function(callback){
         this.app.post(route,function(req,res){
             const message = req.body.message;
-            console.log(req.body);
             res.status(200);
             res.send('ok');
             callback(message);
@@ -30,7 +29,7 @@ function Bot(token,route){
         const options = {
             url: 'https://api.telegram.org/bot'+this.token+'/sendMessage',
             json: true,
-            body: text
+            body: message
         };
         request.post(options,function(err,res,body){
             console.log("message send");
