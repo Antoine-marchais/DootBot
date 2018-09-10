@@ -13,7 +13,7 @@ function Bot(token,route){
     this.token = token;
     this.app = express();
     this.app.use(bodyParser.json());
-    this.app.listen(8080);
+    this.app.listen(PORT);
     //adding events methods
     this.getMessage = function(callback){
         this.app.post(route,function(req,res){
