@@ -1,8 +1,14 @@
 {
   "name": "dootbot",
   "version": "1.0.0",
-  "description": "a music training telegram bot",
+  "description": "a dooting bot",
   "main": "main.js",
+  "dependencies": {
+    "express": "^4.16.3",
+    "request": "^2.88.0",
+    "telegrambot": "file:telegramBot"
+  },
+  "devDependencies": {},
   "scripts": {
     "start": "node main.js",
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -11,22 +17,10 @@
     "type": "git",
     "url": "git+https://github.com/Antoine-marchais/DootBot.git"
   },
-  "keywords": [
-    "bot",
-    "doot"
-  ],
   "author": "Obal",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/Antoine-marchais/DootBot/issues"
   },
-  "homepage": "https://github.com/Antoine-marchais/DootBot#readme",
-  "dependencies": {
-    "body-parse": "^0.1.0",
-    "express": "^4.16.3",
-    "request": "^2.88.0"
-  },
-  "engines": {
-    "node": "8.11.4"
-  }
+  "homepage": "https://github.com/Antoine-marchais/DootBot#readme"
 }
