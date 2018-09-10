@@ -1,6 +1,6 @@
 const token = "514706312:AAEDQqSaQ-s8YDB7VvepQGjQDMCJNoUFf1Q";
 
-const telegramBot = require("./telegramBot.js");
+const telegramBot = require("telegramBot");
 let count = 1;
 
 const doot = function(){
