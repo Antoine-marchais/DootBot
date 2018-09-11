@@ -7,10 +7,8 @@ function Message(chat_id,text){
     this.text = text;
 };
 
-function Command(cmd,n_args,text,callback){
+function Command(cmd,callback){
     this.cmd = cmd;
-    this.n_args = n_args;
-    this.text = text
     this.callback = callback;
 }
 
@@ -29,7 +27,7 @@ const parseCommand = function(text){
     return cmd;
 }
 
-const parseArgs = function(text){
+exports.parseArgs = function(text){
     let args = [];
     let arg = "";
     let i = 0;
@@ -68,20 +66,19 @@ function Bot(token,route){
         for(let i=0;i<this.commands.length;i+=1){
             if (this.commands[i].cmd == cmd){
                 cmdExists = true;
-                args = parseArgs(message.text).slice(1,this.commands[i].n_args);
-                this.commands[i].callback(args);
+                this.commands[i].callback(message);
             }
         }
         if (!cmdExists){
-            this.defaultCommand();
+            this.defaultCommand(message);
         }
         res.status(200);
         res.send('ok');
         callback(message);
     });
 
-    this.addCommand = function(cmd,n_args,callback){
-        this.commands.push(new Command(cmd,n_args,text,callback));
+    this.addCommand = function(cmd,callback){
+        this.commands.push(new Command(cmd,callback));
     }
 
     this.setDefault = function(callback){
@@ -104,3 +101,4 @@ function Bot(token,route){
 exports.createBot = function(token,route){
     return new Bot(token,route);
 }
+
