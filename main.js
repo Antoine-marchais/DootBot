@@ -17,8 +17,6 @@ const doot = function(){
 
 const dootBot = telegramBot.createBot(token,"/");
 dootBot.listen(PORT);
-dootBot.getMessage(function(message){
-    const chat_id = message.chat.id;
-    const text = doot();
-    dootBot.sendMessage(chat_id,text);
-});
+dootBot.setDefault(function(){
+    dootBot
+})
