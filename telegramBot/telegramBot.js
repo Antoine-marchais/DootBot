@@ -1,7 +1,6 @@
 const express = require("express");
 const request = require("request");
 const bodyParser = require('body-parser');
-const PORT = process.env.PORT;
 
 function Message(chat_id,text){
     this.chat_id = chat_id;
@@ -13,8 +12,11 @@ function Bot(token,route){
     this.token = token;
     this.app = express();
     this.app.use(bodyParser.json());
-    this.app.listen(PORT);
     //adding events methods
+    this.listen = function(port){
+        this.app.listen(port);
+    }
+
     this.getMessage = function(callback){
         this.app.post(route,function(req,res){
             const message = req.body.message;

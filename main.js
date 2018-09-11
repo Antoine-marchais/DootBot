@@ -1,6 +1,7 @@
 const token = "514706312:AAEDQqSaQ-s8YDB7VvepQGjQDMCJNoUFf1Q";
 
 const telegramBot = require("./telegramBot");
+const PORT = process.env.PORT;
 let count = 1;
 
 const doot = function(){
@@ -15,6 +16,7 @@ const doot = function(){
 };
 
 const dootBot = telegramBot.createBot(token,"/");
+dootBot.listen(PORT);
 dootBot.getMessage(function(message){
     const chat_id = message.chat.id;
     const text = doot();
