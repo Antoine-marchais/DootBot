@@ -57,20 +57,21 @@ function Bot(token,route){
     this.listen = function(port){
         this.app.listen(port);
     }
+    const _this = this;
 
 
     this.app.post(route,function(req,res){
         const message = req.body.message;
         const cmd = parseCommand(message.text);
         let cmdExists = false;
-        for(let i=0;i<this.commands.length;i+=1){
-            if (this.commands[i].cmd == cmd){
+        for(let i=0;i<_this.commands.length;i+=1){
+            if (_this.commands[i].cmd == cmd){
                 cmdExists = true;
-                this.commands[i].callback(message);
+                _this.commands[i].callback(message);
             }
         }
         if (!cmdExists){
-            this.defaultCommand(message);
+            _this.defaultCommand(message);
         }
         res.status(200);
         res.send('ok');
