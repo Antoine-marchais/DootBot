@@ -75,7 +75,6 @@ function Bot(token,route){
         }
         res.status(200);
         res.send('ok');
-        callback(message);
     });
 
     this.addCommand = function(cmd,callback){
