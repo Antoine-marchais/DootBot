@@ -14,10 +14,9 @@ const doot = function(){
     doot += "t";
     return doot;
 };
-let count_req = 0;
 const dootBot = telegramBot.createBot(token,"/");
 dootBot.listen(PORT);
 dootBot.setDefault(function(message){
-    count_req+=1;
-    if (count_req%100==0){console.log(count_req);};
+    const text = doot();
+    dootBot.sendMessage(message.chat.id,text);
 })
