@@ -61,17 +61,19 @@ function Bot(token,route){
 
 
     this.app.post(route,function(req,res){
-        const message = req.body.message;
-        const cmd = parseCommand(message.text);
-        let cmdExists = false;
-        for(let i=0;i<_this.commands.length;i+=1){
-            if (_this.commands[i].cmd == cmd){
-                cmdExists = true;
-                _this.commands[i].callback(message);
+        if (req.body.hasOwnProperty("message")){
+            const message = req.body.message;
+            const cmd = parseCommand(message.text);
+            let cmdExists = false;
+            for(let i=0;i<_this.commands.length;i+=1){
+                if (_this.commands[i].cmd == cmd){
+                    cmdExists = true;
+                    _this.commands[i].callback(message);
+                }
             }
-        }
-        if (!cmdExists){
-            _this.defaultCommand(message);
+            if (!cmdExists){
+                _this.defaultCommand(message);
+            }
         }
         res.status(200);
         res.send('ok');
