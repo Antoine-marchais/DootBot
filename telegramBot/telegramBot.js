@@ -1,12 +1,17 @@
 const express = require("express");
 const request = require("request");
 const bodyParser = require('body-parser');
-const queue = require('express-queue');
+const rateLimit = require('express-rate-limit');
 
 function Message(chat_id,text){
     this.chat_id = chat_id;
     this.text = text;
 };
+
+const limiter = rateLimit({
+    windowMs: 1000,
+    max: 10
+});
 
 function Command(cmd,callback){
     this.cmd = cmd;
@@ -52,8 +57,9 @@ function Bot(token,route){
     this.route = route;
     this.token = token;
     this.app = express();
+    this.app.enable('trust proxy');
     this.app.use(bodyParser.json());
-    this.app.use(queue({activeLimit:5,queuedLimit:15}));
+    this.app.use(limiter);
     this.commands = [];
     //adding events methods
     this.listen = function(port){
