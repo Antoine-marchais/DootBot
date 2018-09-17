@@ -1,6 +1,7 @@
 const express = require("express");
 const request = require("request");
 const bodyParser = require('body-parser');
+const queue = require('express-queue');
 
 function Message(chat_id,text){
     this.chat_id = chat_id;
@@ -52,6 +53,7 @@ function Bot(token,route){
     this.token = token;
     this.app = express();
     this.app.use(bodyParser.json());
+    this.app.use(queue({activeLimit:5,queuedLimit:15}));
     this.commands = [];
     //adding events methods
     this.listen = function(port){
