@@ -15,10 +15,28 @@ const doot = function(){
     return doot;
 };
 const dootBot = telegramBot.createBot(token,"/");
+const dootOn = function(message){
+    dootBot.setDefault(function(message){
+        const text = doot();
+        dootBot.sendMessage(message.chat.id,text);
+    });
+};
 
-dootBot.setDefault(function(message){
-    const text = doot();
-    dootBot.sendMessage(message.chat.id,text);
+const dootOff = function(){
+    dootBot.setDefault(function(){});
+}
+
+
+dootBot.addCommand("/dootOff",function(message){
+    if (message.from.username == "Oz_Obal"){
+        dootOff();
+    }
+});
+
+dootBot.addCommand("/dootOn",function(message){
+    if (message.from.username == "Oz_Obal"){
+        dootOn(message);
+    }
 });
 
 dootBot.listen(PORT);
