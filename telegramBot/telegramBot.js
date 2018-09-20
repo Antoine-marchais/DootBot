@@ -105,7 +105,6 @@ function Bot(token,route){
             body: message
         };
         request.post(options,function(err,res,body){
-            console.log("message send");
         });
     }
 }
