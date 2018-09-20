@@ -21,7 +21,6 @@ const dootBot = telegramBot.createBot(token,"/");
 const dootOn = function(){
     dootBot.setDefault(function(message){
         up+=1;
-        console.log(up);
         if ((up%20 == 0)&&(message.chat.id==-1001355626155)){
             dootBot.sendMessage(message.chat.id,"Up",62776);
         }
