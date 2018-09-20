@@ -15,7 +15,7 @@ const doot = function(){
     return doot;
 };
 const dootBot = telegramBot.createBot(token,"/");
-const dootOn = function(message){
+const dootOn = function(){
     dootBot.setDefault(function(message){
         const text = doot();
         dootBot.sendMessage(message.chat.id,text);
@@ -30,13 +30,22 @@ const dootOff = function(){
 dootBot.addCommand("/dootOff",function(message){
     if (message.from.username == "Oz_Obal"){
         dootOff();
+        console.log("doot Off");
+    }
+    else {
+        dootBot.defaultCommand(message);
     }
 });
 
 dootBot.addCommand("/dootOn",function(message){
     if (message.from.username == "Oz_Obal"){
-        dootOn(message);
+        dootOn();
+        console.log("doot On");
+    }else {
+        dootBot.defaultCommand(message);
     }
 });
 
+
+dootOn();
 dootBot.listen(PORT);
