@@ -19,12 +19,13 @@ function Command(cmd,callback){
 }
 
 const parseCommand = function(message){
-    if (message.hasOwnProperty(entities)){
-        const len = entities.length;
-        const cmd = [];
+    const cmd = [];
+    if (message.hasOwnProperty("entities")){
+        const len = message.entities.length;
         for (let i = 0;i<len;i+=1){
-            if (entities[i].type == "bot_command"){
-                cmd.push(entities[i]);
+            let ent = message.entities[i];
+            if (ent.type == "bot_command"){
+                cmd.push(message.text.slice(ent.offset,ent.offset+ent.length));
             }
         }
     }
