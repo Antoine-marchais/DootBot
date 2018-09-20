@@ -18,39 +18,17 @@ function Command(cmd,callback){
     this.callback = callback;
 }
 
-const parseCommand = function(text){
-    let char = text[0];
-    let cmd = "";
-    let i = 1;
-    if (char == "/"){
-        char = text[i];
-        while (char != " "){
-            cmd += char;
-            i+=1;
-            char = text[i];
+const parseCommand = function(message){
+    if (message.hasOwnProperty(entities)){
+        const len = entities.length;
+        const cmd = [];
+        for (let i = 0;i<len;i+=1){
+            if (entities[i].type == "bot_command"){
+                cmd.push(entities[i]);
+            }
         }
     }
     return cmd;
-}
-
-exports.parseArgs = function(text){
-    let args = [];
-    let arg = "";
-    let i = 0;
-    while (i<text.length){
-        if (text[i]!=" "){
-            arg += text[i];
-        }
-        else if(arg!=""){
-            args.push(arg);
-            arg = "";
-        }
-        i+=1;
-    }
-    if (arg!=""){
-        args.push(arg);
-    }
-    return args;
 }
 
 function Bot(token,route){
@@ -72,16 +50,18 @@ function Bot(token,route){
         if (req.body.hasOwnProperty("message")){
             const message = req.body.message;
             if (message.hasOwnProperty("text")){
-                const cmd = parseCommand(message.text);
+                const cmd = parseCommand(message);
                 let cmdExists = false;
-                for(let i=0;i<_this.commands.length;i+=1){
-                    if (_this.commands[i].cmd == cmd){
-                        cmdExists = true;
-                        _this.commands[i].callback(message);
+                for (let j=0;j<cmd.length;j+=1){
+                    for(let i=0;i<_this.commands.length;i+=1){
+                        if (_this.commands[i].cmd == cmd){
+                            cmdExists = true;
+                            _this.commands[i].callback(message);
+                        }
                     }
-                }
-                if (!cmdExists){
-                    _this.defaultCommand(message);
+                    if (!cmdExists){
+                        _this.defaultCommand(message);
+                    }
                 }
             }
         }

@@ -23,4 +23,4 @@ dootBot.setDefault(function(message){
     console.log((Math.round(mem/1024/1024*10)/10) + " MB");
 });
 
-dootBot.listen(PORT);
+dootBot.listen(8080);
