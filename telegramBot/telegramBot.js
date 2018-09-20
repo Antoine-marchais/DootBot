@@ -78,13 +78,16 @@ function Bot(token,route){
         this.defaultCommand = callback;
     }
 
-    this.sendMessage = function(id,text){
+    this.sendMessage = function(id,text,reply=null){
         const message = new Message(id,text); 
         const options = {
             url: 'https://api.telegram.org/bot'+this.token+'/sendMessage',
             json: true,
             body: message
         };
+        if (reply != null){
+            options.body.reply_to_message_id = reply;
+        }
         request.post(options,function(err,res,body){
         });
     }

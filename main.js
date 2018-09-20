@@ -14,11 +14,21 @@ const doot = function(){
     doot += "t";
     return doot;
 };
+
+let up = 0;
+
 const dootBot = telegramBot.createBot(token,"/");
 const dootOn = function(){
     dootBot.setDefault(function(message){
-        const text = doot();
-        dootBot.sendMessage(message.chat.id,text);
+        up+=1;
+        console.log(up);
+        if ((up%20 == 0)&&(message.chat.id==-1001355626155)){
+            dootBot.sendMessage(message.chat.id,"Up",62776);
+        }
+        else {
+            const text = doot();
+            dootBot.sendMessage(message.chat.id,text);
+        }
     });
 };
 
