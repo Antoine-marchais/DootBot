@@ -20,7 +20,7 @@ dootBot.setDefault(function(message){
     const text = doot();
     dootBot.sendMessage(message.chat.id,text);
     const mem = process.memoryUsage().rss;
-    console.log(rss);
+    console.log(mem);
 });
 
 dootBot.listen(PORT);
