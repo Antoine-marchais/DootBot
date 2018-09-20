@@ -15,8 +15,12 @@ const doot = function(){
     return doot;
 };
 const dootBot = telegramBot.createBot(token,"/");
-dootBot.listen(PORT);
+
 dootBot.setDefault(function(message){
     const text = doot();
     dootBot.sendMessage(message.chat.id,text);
-})
+    const mem = process.memoryUsage().rss;
+    console.log(rss);
+});
+
+dootBot.listen(PORT);
