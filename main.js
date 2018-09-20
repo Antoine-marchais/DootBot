@@ -22,4 +22,4 @@ dootBot.setDefault(function(message){
     const mem = process.memoryUsage().rss;
 });
 
-dootBot.listen(8080);
+dootBot.listen(PORT);
