@@ -19,7 +19,6 @@ const dootBot = telegramBot.createBot(token,"/");
 dootBot.setDefault(function(message){
     const text = doot();
     dootBot.sendMessage(message.chat.id,text);
-    const mem = process.memoryUsage().rss;
 });
 
 dootBot.listen(PORT);
