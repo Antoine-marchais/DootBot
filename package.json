@@ -7,7 +7,7 @@
     "express": "^4.16.3",
     "request": "^2.88.0",
     "telegrambot": "file:localModules/telegramBot",
-    "json-preferences": "file:localModules/telegramBot"
+    "json-preferences": "file:localModules/json-preferences"
   },
   "devDependencies": {},
   "scripts": {
