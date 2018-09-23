@@ -8,14 +8,14 @@ const preferences = jsonPreferences.preferences("preferences.json");
 
 
 //initialisation
+let up = 0;
+let countDoot = 1;
+let dootActive = true;
 if (preferences.get('up') != null){
-    let up = preferences.get('up');
-    let countDoot = preferences.get('countDoot');
-    let dootActive = preferences.get('dootActive');
+    up = preferences.get('up');
+    countDoot = preferences.get('countDoot');
+    dootActive = preferences.get('dootActive');
 }else {
-    let up = 0;
-    let countDoot = 1;
-    let dootActive = true;
     preferences.set('up',up);
     preferences.set('countDoot',countDoot);
     preferences.set('dootActive',dootActive);
@@ -35,6 +35,8 @@ const doot = function(){
 };
 
 const dootOn = function(){
+    dootActive = true;
+    preferences.set('dootActive',dootActive);
     dootBot.setDefault(function(message){
         up+=1;
         preferences.set('up',up);
@@ -50,6 +52,8 @@ const dootOn = function(){
 
 const dootOff = function(){
     dootBot.setDefault(function(){});
+    dootActive = false;
+    preferences.set('dootActive',dootActive)
 }
 
 
@@ -78,6 +82,8 @@ dootBot.addCommand("/dootOn",function(message){
 
 if (dootActive){
     dootOn();
+}else {
+    dootOff();
 }
 
-dootBot.listen(8080);
+dootBot.listen(PORT);
