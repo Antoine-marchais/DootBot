@@ -23,5 +23,9 @@
   "bugs": {
     "url": "https://github.com/Antoine-marchais/DootBot/issues"
   },
-  "homepage": "https://github.com/Antoine-marchais/DootBot#readme"
+  "homepage": "https://github.com/Antoine-marchais/DootBot#readme",
+  "engines": {
+    "node": "8.11.4",
+    "npm": "5.6.0"
+  }
 }
