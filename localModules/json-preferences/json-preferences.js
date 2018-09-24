@@ -8,6 +8,7 @@ function Preferences(path){
         this.obj = {};
         fs.writeFile(this.path,JSON.stringify(this.obj),'utf-8',function(err){
             if(err){console.log(err)}
+            else{console.log("created preference file")};
         });
     }
     
