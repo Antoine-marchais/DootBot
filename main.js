@@ -41,7 +41,8 @@ const dootOn = function(){
         up+=1;
         preferences.set('up',up);
         if ((up%20 == 0)&&(message.chat.id==-1001355626155)){
-            dootBot.sendMessage(message.chat.id,"Up",62776);
+            //dootBot.sendMessage(message.chat.id,"Up",62776);
+            dootBot.sendMessage(message.chat.id,"Joyeux abeliversaire !!");
         }
         else {
             const text = doot();
