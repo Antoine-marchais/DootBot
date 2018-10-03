@@ -1,9 +1,8 @@
+require('dotenv').config();
 const token = "514706312:AAEDQqSaQ-s8YDB7VvepQGjQDMCJNoUFf1Q";
-
 const telegramBot = require("./localModules/telegramBot");
 const jsonPreferences = require('./localModules/json-preferences');
 const PORT = process.env.PORT;
-
 const preferences = jsonPreferences.preferences("preferences.json");
 
 
