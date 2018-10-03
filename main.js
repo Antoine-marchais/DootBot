@@ -41,8 +41,7 @@ const dootOn = function(){
         up+=1;
         preferences.set('up',up);
         if ((up%20 == 0)&&(message.chat.id==-1001355626155)){
-            //dootBot.sendMessage(message.chat.id,"Up",62776);
-            dootBot.sendMessage(message.chat.id,"Joyeux abeliversaire !!");
+            dootBot.sendMessage(message.chat.id,"Up",62776);
         }
         else {
             const text = doot();
@@ -81,10 +80,18 @@ dootBot.addCommand("/dootOn",function(message){
     }
 });
 
+dootBot.addCommand("/mastoDoot",function(message){
+    if (dootActive) {
+        for (let i=0;i<20;i+=1) {
+            dootBot.sendMessage(message.chat.id,"DOOOOOOOOOOOOOOOT");
+        }
+    }
+})
+
 if (dootActive){
     dootOn();
 }else {
     dootOff();
 }
 
-dootBot.listen(PORT);
+dootBot.listen(8080);
