@@ -82,7 +82,7 @@ dootBot.addCommand("/dootOn",function(message){
 dootBot.addCommand("/mastoDoot",function(message){
     if (dootActive) {
         for (let i=0;i<20;i+=1) {
-            dootBot.sendMessage(message.chat.id,"DOOOOOOOOOOOOOOOT");
+            dootBot.sendMessage(message.chat.id,"nikBaloo");
         }
     }
 })
