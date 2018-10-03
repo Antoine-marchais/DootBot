@@ -94,4 +94,4 @@ if (dootActive){
     dootOff();
 }
 
-dootBot.listen(8080);
+dootBot.listen(PORT);
