@@ -83,10 +83,14 @@ dootBot.addCommand("/dootOn",function(message){
 dootBot.addCommand("/mastoDoot",function(message){
     if (dootActive) {
         for (let i=0;i<20;i+=1) {
-            dootBot.sendMessage(message.chat.id,"nikBaloo");
+            dootBot.sendMessage(message.chat.id,"DOOOOOOOOOOOT !!!!!");
         }
     }
 })
+
+dootBot.addCommand("/reDoot",function(){
+    countDoot = 1;
+});
 
 if (dootActive){
     dootOn();
@@ -102,13 +106,11 @@ process.on('SIGTERM',function(){
     });
     
     const queryString = " UPDATE bot_settings SET o_count = "+countDoot
-        +", doot_isactive = "+dootActive+"WHERE id = 1";
+        +", doot_isactive = "+dootActive+" WHERE id = 1";
 
     pool.query(queryString, (err, res) => {
-        if (err){console.log(err)}
-        else {
-                console.log("saved params");
-        }
+        console.log("saved params");
         pool.end();
-    })
+        process.exit(0);
+    });
 })
