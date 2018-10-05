@@ -9,7 +9,6 @@ let up = 0;
 let countDoot = 1;
 let dootActive = true;
 let up_param = 0;
-
 const pool = new pg.Pool({
     connectionString: process.env.DATABASE_URL,
 });
@@ -22,7 +21,6 @@ pool.query('SELECT * FROM bot_settings WHERE id = 1', (err, res) => {
         up = data.up_parametter;
         dootActive = data.doot_isactive
     }
-    pool.end();
 })
 
 //helper functions
@@ -53,6 +51,17 @@ dootBot.setDefault(function(message){
         }
     }
 });
+
+dootBot.addCommand("/doot",function(message){
+    if (dootActive){
+        dootBot.defaultCommand(message);
+        const queryString = "SELECT * FROM user_stats WHERE first_name = $1 AND last_name = $2";
+        const values = [message.from.first_name,message.from.last_name];
+        pool.query(queryString,values,(err,res) => {
+            
+        })
+    }
+})
 
 dootBot.addCommand("/dootOff",function(message){
     if (message.from.username == "Oz_Obal"){
@@ -88,10 +97,6 @@ dootBot.addCommand("/reDoot",function(){
 dootBot.listen(PORT);
 
 process.on('SIGTERM',function(){
-    const pool = new pg.Pool({
-        connectionString: process.env.DATABASE_URL,
-    });
-    
     const queryString = "UPDATE bot_settings SET o_count = $1, doot_isactive = $2 WHERE id = 1";
     const values = [countDoot,dootActive];
 
