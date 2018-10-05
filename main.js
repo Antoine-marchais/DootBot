@@ -92,10 +92,10 @@ process.on('SIGTERM',function(){
         connectionString: process.env.DATABASE_URL,
     });
     
-    const queryString = " UPDATE bot_settings SET o_count = "+countDoot
-        +", doot_isactive = "+dootActive+" WHERE id = 1";
+    const queryString = "UPDATE bot_settings SET o_count = $1, doot_isactive = $2 WHERE id = 1";
+    const values = [countDoot,dootActive];
 
-    pool.query(queryString, (err, res) => {
+    pool.query(queryString,values, (err, res) => {
         console.log("saved params");
         pool.end();
         process.exit(0);
