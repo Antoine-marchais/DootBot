@@ -37,9 +37,12 @@ const doot = function(){
     return doot;
 };
 
-const dootOn = function(){
-    dootActive = true;
-    dootBot.setDefault(function(message){
+//creation of bot
+const dootBot = telegramBot.createBot(token,"/");
+
+//setting commands
+dootBot.setDefault(function(message){
+    if (dootActive){
         up+=1;
         if ((up%up_param == 0)&&(message.chat.id==-1001355626155)){
             dootBot.sendMessage(message.chat.id,"Up",62776);
@@ -48,22 +51,12 @@ const dootOn = function(){
             const text = doot();
             dootBot.sendMessage(message.chat.id,text);
         }
-    });
-};
+    }
+});
 
-const dootOff = function(){
-    dootBot.setDefault(function(){});
-    dootActive = false;
-}
-
-
-//creation of bot
-const dootBot = telegramBot.createBot(token,"/");
-
-//setting commands
 dootBot.addCommand("/dootOff",function(message){
     if (message.from.username == "Oz_Obal"){
-        dootOff();
+        dootActive = false;
         console.log("doot Off");
     }
     else {
@@ -73,7 +66,7 @@ dootBot.addCommand("/dootOff",function(message){
 
 dootBot.addCommand("/dootOn",function(message){
     if (message.from.username == "Oz_Obal"){
-        dootOn();
+        dootActive = true;
         console.log("doot On");
     }else {
         dootBot.defaultCommand(message);
@@ -91,12 +84,6 @@ dootBot.addCommand("/mastoDoot",function(message){
 dootBot.addCommand("/reDoot",function(){
     countDoot = 1;
 });
-
-if (dootActive){
-    dootOn();
-}else {
-    dootOff();
-}
 
 dootBot.listen(PORT);
 
