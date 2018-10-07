@@ -18,7 +18,7 @@ pool.query('SELECT * FROM bot_settings WHERE id = 1', (err, res) => {
     else {
         const data = res.rows[0];
         countDoot = data.o_count;
-        up = data.up_parametter;
+        up_param = data.up_parametter;
         dootActive = data.doot_isactive
     }
 })
@@ -66,7 +66,7 @@ dootBot.addCommand("/doot",function(message){
                 pool.query(queryString,values,(err,res)=>{})
             }else {
                 const queryString = "INSERT INTO user_stats(bot_id,first_name,last_name,dooted,mastodooted) VALUES($1,$2,$3,$4,$5)";
-                const values = [1,'Antoine','Marchais',1,0];
+                const values = [1,message.from.first_name,message.from.last_name,1,0];
                 pool.query(queryString,values,(err,res)=>{});
             }
         })
