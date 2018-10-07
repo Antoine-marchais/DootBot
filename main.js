@@ -115,11 +115,36 @@ dootBot.addCommand("/mastoDoot",function(message){
     }
 })
 
+dootBot.addCommand("/stats",function(message){
+    const queryString = "SELECT * FROM user_stats ORDER BY dooted DESC LIMIT 3";
+    pool.query(queryString,function(err,res){
+        const results = res.rows;
+        let text = "dooted the most :\n\n";
+        results.forEach(function(row,i){
+            text += `  ${i+1}. ${row.first_name} ${row.last_name} : ${row.dooted}\n`;
+        })
+        const queryString = "SELECT * FROM user_stats ORDER BY mastodooted DESC LIMIT 3";
+        pool.query(queryString,(err,res)=>{
+            const results = res.rows;
+            text += "\nmastodooted the most :\n\n";
+            results.forEach(function(row,i){
+                text += `  ${i+1}. ${row.first_name} ${row.last_name} : ${row.mastodooted}\n`;
+            })
+            dootBot.sendMessage(message.chat.id,text);
+        })
+    });
+})
+
 dootBot.addCommand("/reDoot",function(){
     countDoot = 1;
 });
 
+
+//launchingBot
+
 dootBot.listen(PORT);
+
+//to do on termination
 
 process.on('SIGTERM',function(){
     const queryString = "UPDATE bot_settings SET o_count = $1, doot_isactive = $2 WHERE id = 1";
