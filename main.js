@@ -55,10 +55,20 @@ dootBot.setDefault(function(message){
 dootBot.addCommand("/doot",function(message){
     if (dootActive){
         dootBot.defaultCommand(message);
-        const queryString = "SELECT * FROM user_stats WHERE first_name = $1 AND last_name = $2";
-        const values = [message.from.first_name,message.from.last_name];
+        const queryString = "SELECT * FROM user_stats WHERE bot_id = $1 AND first_name = $2 AND last_name = $3";
+        const values = [1,message.from.first_name,message.from.last_name];
         pool.query(queryString,values,(err,res) => {
-            
+            if (res.rows.length != 0){
+                const dooted = res.rows[0].dooted;
+                const id = res.rows[0].id;
+                const queryString = "UPDATE user_stats SET dooted = $1 WHERE id = $2";
+                const values = [dooted+1,id];
+                pool.query(queryString,values,(err,res)=>{})
+            }else {
+                const queryString = "INSERT INTO user_stats(bot_id,first_name,last_name,dooted,mastodooted) VALUES($1,$2,$3,$4,$5)";
+                const values = [1,'Antoine','Marchais',1,0];
+                pool.query(queryString,values,(err,res)=>{});
+            }
         })
     }
 })
@@ -87,6 +97,21 @@ dootBot.addCommand("/mastoDoot",function(message){
         for (let i=0;i<20;i+=1) {
             dootBot.sendMessage(message.chat.id,"DOOOOOOOOOOOT !!!!!");
         }
+        const queryString = "SELECT * FROM user_stats WHERE bot_id = $1 AND first_name = $2 AND last_name = $3";
+        const values = [1,message.from.first_name,message.from.last_name];
+        pool.query(queryString,values,(err,res) => {
+            if (res.rows.length != 0){
+                const mastodooted = res.rows[0].mastodooted;
+                const id = res.rows[0].id;
+                const queryString = "UPDATE user_stats SET mastodooted = $1 WHERE id = $2";
+                const values = [mastodooted+1,id];
+                pool.query(queryString,values,(err,res)=>{});
+            }else {
+                const queryString = "INSERT INTO user_stats(bot_id,first_name,last_name,dooted,mastodooted) VALUES($1,$2,$3,$4,$5)";
+                const values = [1,'Antoine','Marchais',1,0];
+                pool.query(queryString,values,(err,res)=>{});
+            }
+        })
     }
 })
 
