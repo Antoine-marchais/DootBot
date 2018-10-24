@@ -74,7 +74,7 @@ dootBot.addCommand("/doot",function(message){
 })
 
 dootBot.addCommand("/dootOff",function(message){
-    if (message.from.username == "Oz_Obal"){
+    if (message.from.username == "Oz_Obal" || message.from.username == "Dixneuf19"){
         dootActive = false;
         console.log("doot Off");
     }
@@ -84,7 +84,7 @@ dootBot.addCommand("/dootOff",function(message){
 });
 
 dootBot.addCommand("/dootOn",function(message){
-    if (message.from.username == "Oz_Obal"){
+    if (message.from.username == "Oz_Obal" || message.from.username == "Dixneuf19"){
         dootActive = true;
         console.log("doot On");
     }else {
