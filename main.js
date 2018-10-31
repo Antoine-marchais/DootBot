@@ -27,11 +27,11 @@ pool.query('SELECT * FROM bot_settings WHERE id = 1', (err, res) => {
 const doot = function(){
     countDoot += 1;
     let doot = "";
-    doot += "d";
+    doot += "sp";
     for(var i =0;i<countDoot;i+=1){
         doot += "o";
     };
-    doot += "t";
+    doot += "ky";
     return doot;
 };
 
