@@ -31,7 +31,7 @@ const doot = function(){
     for(var i =0;i<countDoot;i+=1){
         doot += "o";
     };
-    doot += "t";
+    doot += "t ? That's a name I haven't heard in a really long time...";
     return doot;
 };
 
