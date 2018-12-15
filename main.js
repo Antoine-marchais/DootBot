@@ -28,6 +28,7 @@ const doot = function(){
     countDoot += 1;
     let doot = "";
     doot += "d";
+    if (countDoot === 20){countDoot = 2;}
     for(var i =0;i<countDoot;i+=1){
         doot += "o";
     };
