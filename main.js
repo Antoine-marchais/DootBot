@@ -29,7 +29,7 @@ const doot = function(){
     let doot = "";
     doot += "d";
     if (countDoot === 200){countDoot = 2;}
-    doot = `d${countDoot*"o"}t`
+    doot = "d"+"o".repeat(countDoot)+"t"
     return doot;
 };
 
