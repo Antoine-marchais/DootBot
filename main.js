@@ -28,11 +28,8 @@ const doot = function(){
     countDoot += 1;
     let doot = "";
     doot += "d";
-    if (countDoot === 20){countDoot = 2;}
-    for(var i =0;i<countDoot;i+=1){
-        doot += "o";
-    };
-    doot += "t ? That's a name I haven't heard in a really long time...";
+    if (countDoot === 200){countDoot = 2;}
+    doot = f"d{countDoot*"o"}t"
     return doot;
 };
 
