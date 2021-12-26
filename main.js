@@ -9,10 +9,15 @@ let up = 0;
 let countDoot = 1;
 let dootActive = true;
 let up_param = 0;
+
+//TODO Load globals from database
+/*
 const pool = new pg.Pool({
     connectionString: process.env.DATABASE_URL,
 });
-  
+*/  
+
+/*
 pool.query('SELECT * FROM bot_settings WHERE id = 1', (err, res) => {
     if (err){console.log(err)}
     else {
@@ -22,6 +27,7 @@ pool.query('SELECT * FROM bot_settings WHERE id = 1', (err, res) => {
         dootActive = data.doot_isactive
     }
 })
+*/
 
 //helper functions
 const doot = function(){
@@ -37,6 +43,7 @@ const doot = function(){
 const dootBot = telegramBot.createBot(token,"/");
 
 //setting commands
+/*
 dootBot.setDefault(function(message){
     if (dootActive){
         up+=1;
@@ -49,10 +56,15 @@ dootBot.setDefault(function(message){
         }
     }
 });
+*/
 
 dootBot.addCommand("/doot",function(message){
     if (dootActive){
-        dootBot.defaultCommand(message);
+        const text = doot();
+        dootBot.sendMessage(message.chat.id, text)
+
+        //TODO Save Stats in database
+        /*
         const queryString = "SELECT * FROM user_stats WHERE bot_id = $1 AND first_name = $2 AND last_name = $3";
         const values = [1,message.from.first_name,message.from.last_name];
         pool.query(queryString,values,(err,res) => {
@@ -68,6 +80,7 @@ dootBot.addCommand("/doot",function(message){
                 pool.query(queryString,values,(err,res)=>{});
             }
         })
+        */
     }
 })
 
@@ -90,6 +103,8 @@ dootBot.addCommand("/dootOn",function(message){
     }
 });
 
+// TODO Add or remove mastodoot
+/*
 dootBot.addCommand("/mastoDoot",function(message){
     if (dootActive) {
         for (let i=0;i<20;i+=1) {
@@ -112,7 +127,10 @@ dootBot.addCommand("/mastoDoot",function(message){
         })
     }
 })
+*/
 
+//TODO retrieve stats from db and display them
+/*
 dootBot.addCommand("/stats",function(message){
     const queryString = "SELECT * FROM user_stats ORDER BY dooted DESC LIMIT 3";
     pool.query(queryString,function(err,res){
@@ -132,25 +150,6 @@ dootBot.addCommand("/stats",function(message){
         })
     });
 })
+*/
 
-dootBot.addCommand("/reDoot",function(){
-    countDoot = 1;
-});
-
-
-//launchingBot
-
-dootBot.listen(PORT);
-
-//to do on termination
-
-process.on('SIGTERM',function(){
-    const queryString = "UPDATE bot_settings SET o_count = $1, doot_isactive = $2 WHERE id = 1";
-    const values = [countDoot,dootActive];
-
-    pool.query(queryString,values, (err, res) => {
-        console.log("saved params");
-        pool.end();
-        process.exit(0);
-    });
-})
+exports.processMessage = dootBot.processMessage

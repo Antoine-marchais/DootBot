@@ -30,6 +30,7 @@ function Bot(token,route){
     this.route = route;
     this.token = token;
     this.commands = [];
+    this.defaultCommand = function(message){}
 
     // find commands in the message and execute them
     this.processMessage = function(req,res){
