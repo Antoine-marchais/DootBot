@@ -30,6 +30,7 @@ function Bot(token,route){
     this.route = route;
     this.token = token;
     this.commands = [];
+    const _this = this
     this.defaultCommand = function(message){}
 
     // find commands in the message and execute them
@@ -37,9 +38,11 @@ function Bot(token,route){
         if (req.body.hasOwnProperty("message")){
             const message = req.body.message;
             if (message.hasOwnProperty("text")){
-                const commands = parseCommand(message);
+                const parsedCommands = parseCommand(message);
                 let cmdExists = false;
-                for (let j = 0; j < commands.length; j += 1){
+                let cmd;
+                for (let j = 0; j < parsedCommands.length; j += 1){
+                    cmd = parsedCommands[j]
                     for(let i = 0; i < _this.commands.length; i += 1){
                         if (_this.commands[i].cmd == cmd){
                             cmdExists = true;

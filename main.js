@@ -1,14 +1,13 @@
 require('dotenv').config();
 const token = process.env.TOKEN;
 const telegramBot = require("./localModules/telegramBot");
-const PORT = process.env.PORT;
-const pg = require('pg');
+//const pg = require('pg');
 
 //initialisation
-let up = 0;
+//let up = 0;
 let countDoot = 1;
 let dootActive = true;
-let up_param = 0;
+//let up_param = 0;
 
 //TODO Load globals from database
 /*
