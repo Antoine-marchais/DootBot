@@ -23,5 +23,7 @@ jobs:
           gcloud functions describe $BOT_NAME --format="get(httpsTrigger.url)" > function_endpoint.txt
       - name: set hook with function endpoint 
         run: |
+          apt-get install -y jq
+          cat function_endpoint.txt
           FUNCTION_ENDPOINT=$(cat function_endpoint.txt)
-          bash set_hook.sh $FUNCTION_ENDPOINT $BOT_TOKEN
+          bash set_hook.sh $FUNCTION_ENDPOINT ${{ secrets.BOT_TOKEN }}
