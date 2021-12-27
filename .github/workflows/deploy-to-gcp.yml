@@ -5,6 +5,7 @@ on:
 env:
   BOT_NAME: dootbot
   GCP_PROJECT: bots-everywhere
+  GCP_REGION: europe-west1
 jobs:
   deploy-function:
     runs-on: ubuntu-latest
@@ -25,8 +26,8 @@ jobs:
             --trigger-http \
             --allow-unauthenticated \
             --set-env-vars=TOKEN=${{ secrets.BOT_TOKEN }} \
-            --region=europe-west1
-          gcloud functions describe $BOT_NAME --format="get(httpsTrigger.url)" > function_endpoint.txt
+            --region=$GCP_REGION
+          gcloud functions describe $BOT_NAME --region=$GCP_REGION --format="get(httpsTrigger.url)" > function_endpoint.txt
       - name: set hook with function endpoint 
         run: |
           apt-get install -y jq
