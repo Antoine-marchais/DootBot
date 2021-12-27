@@ -1,7 +1,7 @@
 name: deploy-to-gcp
 on:
   push:
-    branches: ["init_refacto"]
+    branches: ["master"]
 env:
   BOT_NAME: dootbot
   GCP_PROJECT: bots-everywhere
