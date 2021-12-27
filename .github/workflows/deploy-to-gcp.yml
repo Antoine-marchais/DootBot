@@ -1,0 +1,27 @@
+name: deploy-to-gcp
+on:
+  push:
+    branches: ["init_refacto"]
+env:
+  BOT_NAME: dootbot
+  GCP_PROJECT: bots-everywhere
+jobs:
+  deploy-function:
+    runs-on: ubuntu-latest
+    container: gcr.io/google.com/cloudsdktool/cloud-sdk
+    steps:
+      - uses: actions/checkout@v2
+      - run: 'echo "$GCP_KEY" > key_file.json'
+        shell: bash
+        env:
+          GCP_KEY: ${{ secrets.GCP_SERVICE_KEY }}
+      - name: create cloud function 
+        run: | 
+          gcloud auth activate-service-account --key-file=key_file.json
+          gcloud config set project $GCP_PROJECT
+          gcloud functions deploy $BOT_NAME --entry-point=processMessage --runtime=nodejs14 --trigger-http --allow-unauthenticated --set-env-vars=TOKEN=${{ secrets.BOT_TOKEN }}
+          gcloud functions describe $BOT_NAME --format="get(httpsTrigger.url)" > function_endpoint.txt
+      - name: set hook with function endpoint 
+        run: |
+          FUNCTION_ENDPOINT=$(cat function_endpoint.txt)
+          bash set_hook.sh $FUNCTION_ENDPOINT $BOT_TOKEN

@@ -1,6 +1,6 @@
 require('dotenv').config();
 const token = process.env.TOKEN;
-const telegramBot = require("./localModules/telegramBot");
+const telegramBot = require("./localModules/telegramBot/telegramBot");
 //const pg = require('pg');
 
 //initialisation
