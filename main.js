@@ -1,7 +1,8 @@
 require('dotenv').config();
 const token = process.env.TOKEN;
 const telegramBot = require("./localModules/telegramBot/telegramBot");
-const Firestore = require("@google-cloud/firestore")
+const Firestore = require("@google-cloud/firestore");
+const { FieldValue } = require('@google-cloud/firestore');
 
 const db = new Firestore()
 
@@ -45,24 +46,21 @@ const dootBot = telegramBot.createBot(token,"/");
 dootBot.addCommand("/doot",function(message){
     if (dootActive){
         doot().then(text => dootBot.sendMessage(message.chat.id, text));
-        //TODO Save Stats in database
-        /*
-        const queryString = "SELECT * FROM user_stats WHERE bot_id = $1 AND first_name = $2 AND last_name = $3";
-        const values = [1,message.from.first_name,message.from.last_name];
-        pool.query(queryString,values,(err,res) => {
-            if (res.rows.length != 0){
-                const dooted = res.rows[0].dooted;
-                const id = res.rows[0].id;
-                const queryString = "UPDATE user_stats SET dooted = $1 WHERE id = $2";
-                const values = [dooted+1,id];
-                pool.query(queryString,values,(err,res)=>{})
-            }else {
-                const queryString = "INSERT INTO user_stats(bot_id,first_name,last_name,dooted,mastodooted) VALUES($1,$2,$3,$4,$5)";
-                const values = [1,message.from.first_name,message.from.last_name,1,0];
-                pool.query(queryString,values,(err,res)=>{});
+        const statsRef = db.collection('dootbot').doc('stats')
+        const userRef = statsRef.collection('users').doc(String(message.from.id))
+        userRef.get().then((userSnapshot) => {
+            if (userSnapshot.exists) {
+                userRef.update({dooted: FieldValue.increment(1)})
+            } else {
+                userRef.set({
+                    first_name: message.from.first_name,
+                    last_name: message.from.last_name,
+                    username: message.from.username,
+                    dooted: 1,
+                    mastodooted: 0
+                })
             }
         })
-        */
     }
 })
 
