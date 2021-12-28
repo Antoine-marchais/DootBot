@@ -1,18 +1,19 @@
 # DootBot - A telegram dooting bot
 
-A Telegram bot hosted on GCP cloud functions, receiving updates from Telegram by webhook
+A Telegram bot hosted on GCP cloud functions and backed by firestore, receiving updates from Telegram by webhook
 
-## Setup
+## Local testing
 
 This bot uses nodejs and the node package manager to manage dependencies.
 To install required dependencies, run `npm install`
 
-## Local testing
-
 A local nodejs server can be run for local testing.
-To allow the bot to post messages, the bot token must be set as an environment variable:
+To allow the bot to post messages, the bot token must be set as an environment variable.
+Furthermore, a service account is used to access the firestore database. A key for the service account
+must be downloaded and its path set as an environment variable for authentication of the local server.
 ```
 export TOKEN=<your-bot-token>
+export GOOGLE_APPLICATION_CREDENTIALS=<path-to-key-file>
 ```
 
 The local server can be run with the following command:
