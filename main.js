@@ -109,27 +109,21 @@ dootBot.addCommand("/mastoDoot",function(message){
     }
 })
 
-//TODO retrieve stats from db and display them
-/*
-dootBot.addCommand("/stats",function(message){
-    const queryString = "SELECT * FROM user_stats ORDER BY dooted DESC LIMIT 3";
-    pool.query(queryString,function(err,res){
-        const results = res.rows;
-        let text = "dooted the most :\n\n";
-        results.forEach(function(row,i){
-            text += `  ${i+1}. ${row.first_name} ${row.last_name} : ${row.dooted}\n`;
-        })
-        const queryString = "SELECT * FROM user_stats ORDER BY mastodooted DESC LIMIT 3";
-        pool.query(queryString,(err,res)=>{
-            const results = res.rows;
-            text += "\nmastodooted the most :\n\n";
-            results.forEach(function(row,i){
-                text += `  ${i+1}. ${row.first_name} ${row.last_name} : ${row.mastodooted}\n`;
-            })
-            dootBot.sendMessage(message.chat.id,text);
-        })
-    });
+//fetch and display stats on the number of doots
+dootBot.addCommand("/stats", async function(message){
+    const usersRef = db.collection('dootbot').doc('stats').collection('users');
+    let snapshots = await usersRef.orderBy('dooted', 'desc').limit(3).get()
+    let text = "dooted the most :\n\n";
+    snapshots.docs.forEach(function(row,i){
+        text += `  ${i+1}. ${row.data().first_name} ${row.data().last_name} : ${row.data().dooted}\n`;
+    })
+    text += "\nmastodooted the most :\n\n";
+    snapshots = await usersRef.orderBy('mastodooted', 'desc').limit(3).get()
+    snapshots.docs.forEach(function(row,i){
+        text += `  ${i+1}. ${row.data().first_name} ${row.data().last_name} : ${row.data().mastodooted}\n`;
+    })
+    dootBot.sendMessage(message.chat.id,text);
 })
-*/
+
 
 exports.processMessage = dootBot.processMessage
