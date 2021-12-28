@@ -1,39 +1,39 @@
 require('dotenv').config();
 const token = process.env.TOKEN;
 const telegramBot = require("./localModules/telegramBot/telegramBot");
-//const pg = require('pg');
+const Firestore = require("@google-cloud/firestore")
 
-//initialisation
-//let up = 0;
+const db = new Firestore()
+
+//initialisation from firestore settings db
 let countDoot = 1;
-let dootActive = true;
-//let up_param = 0;
+let dootActive;
 
-//TODO Load globals from database
-/*
-const pool = new pg.Pool({
-    connectionString: process.env.DATABASE_URL,
-});
-*/  
-
-/*
-pool.query('SELECT * FROM bot_settings WHERE id = 1', (err, res) => {
-    if (err){console.log(err)}
-    else {
-        const data = res.rows[0];
-        countDoot = data.o_count;
-        up_param = data.up_parametter;
-        dootActive = data.doot_isactive
+(async () => {
+    try {
+        dootActive = (await db.collection('dootbot').doc('settings').get()).data()
+        console.log("init succeeded")
+    } catch (e) {
+        console.log("init failed", e)
     }
-})
-*/
+})()
 
-//helper functions
-const doot = function(){
-    countDoot += 1;
+//create the doot message and update the o count in the database
+async function doot(){
+    const settingsRef = db.collection('dootbot').doc('settings')
+    try {
+        await db.runTransaction(async (t) => {
+          const settings = await t.get(settingsRef);
+          countDoot = settings.data().countDoot + 1;
+          if (countDoot === 200){countDoot = 2;}
+          t.update(settingsRef, {countDoot: countDoot});
+        });
+        console.log('Doot transaction succeeded');
+      } catch (e) {
+        console.log('Doot transaction failed:', e);
+      }
     let doot = "";
     doot += "d";
-    if (countDoot === 200){countDoot = 2;}
     doot = "d"+"o".repeat(countDoot)+"t";
     return doot;
 };
@@ -41,27 +41,10 @@ const doot = function(){
 //creation of bot
 const dootBot = telegramBot.createBot(token,"/");
 
-//setting commands
-/*
-dootBot.setDefault(function(message){
-    if (dootActive){
-        up+=1;
-        if ((up%up_param == 0)&&(message.chat.id==-1001355626155)){
-            dootBot.sendMessage(message.chat.id,"Up",62776);
-        }
-        else {
-            const text = doot();
-            dootBot.sendMessage(message.chat.id,text);
-        }
-    }
-});
-*/
-
+//fetch the countDoot param, send message and update stats
 dootBot.addCommand("/doot",function(message){
     if (dootActive){
-        const text = doot();
-        dootBot.sendMessage(message.chat.id, text)
-
+        doot().then(text => dootBot.sendMessage(message.chat.id, text));
         //TODO Save Stats in database
         /*
         const queryString = "SELECT * FROM user_stats WHERE bot_id = $1 AND first_name = $2 AND last_name = $3";
@@ -83,20 +66,22 @@ dootBot.addCommand("/doot",function(message){
     }
 })
 
+//stop the bot from dooting by updating the dootActive parameter
 dootBot.addCommand("/dootOff",function(message){
     if (message.from.username == "Oz_Obal" || message.from.username == "Dixneuf19"){
-        dootActive = false;
-        console.log("doot Off");
+        dootActive = false
+        db.collection('dootbot').doc('settings').update({dootActive: false}).then(success => console.log("doot Off"))
     }
     else {
         dootBot.defaultCommand(message);
     }
 });
 
+//resume the dooting behavior by updating the dootActive parameter
 dootBot.addCommand("/dootOn",function(message){
     if (message.from.username == "Oz_Obal" || message.from.username == "Dixneuf19"){
         dootActive = true;
-        console.log("doot On");
+        db.collection('dootbot').doc('settings').update({dootActive: true}).then(success => console.log("doot On"))
     }else {
         dootBot.defaultCommand(message);
     }
