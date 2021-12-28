@@ -54,7 +54,7 @@ dootBot.addCommand("/doot",function(message){
             } else {
                 userRef.set({
                     first_name: message.from.first_name,
-                    last_name: message.from.last_name,
+                    last_name: ('last_name' in message.from) ? message.from.last_name : '',
                     username: message.from.username,
                     dooted: 1,
                     mastodooted: 0
@@ -99,7 +99,7 @@ dootBot.addCommand("/mastoDoot",function(message){
             } else {
                 userRef.set({
                     first_name: message.from.first_name,
-                    last_name: message.from.last_name,
+                    last_name: ('last_name' in message.from) ? message.from.last_name: '',
                     username: message.from.username,
                     dooted: 0,
                     mastodooted: 1
