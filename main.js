@@ -1,39 +1,40 @@
 require('dotenv').config();
 const token = process.env.TOKEN;
 const telegramBot = require("./localModules/telegramBot/telegramBot");
-//const pg = require('pg');
+const Firestore = require("@google-cloud/firestore");
+const { FieldValue } = require('@google-cloud/firestore');
 
-//initialisation
-//let up = 0;
+const db = new Firestore()
+
+//initialisation from firestore settings db
 let countDoot = 1;
-let dootActive = true;
-//let up_param = 0;
+let dootActive;
 
-//TODO Load globals from database
-/*
-const pool = new pg.Pool({
-    connectionString: process.env.DATABASE_URL,
-});
-*/  
-
-/*
-pool.query('SELECT * FROM bot_settings WHERE id = 1', (err, res) => {
-    if (err){console.log(err)}
-    else {
-        const data = res.rows[0];
-        countDoot = data.o_count;
-        up_param = data.up_parametter;
-        dootActive = data.doot_isactive
+(async () => {
+    try {
+        dootActive = (await db.collection('dootbot').doc('settings').get()).data()
+        console.log("init succeeded")
+    } catch (e) {
+        console.log("init failed", e)
     }
-})
-*/
+})()
 
-//helper functions
-const doot = function(){
-    countDoot += 1;
+//create the doot message and update the o count in the database
+async function doot(){
+    const settingsRef = db.collection('dootbot').doc('settings')
+    try {
+        await db.runTransaction(async (t) => {
+          const settings = await t.get(settingsRef);
+          countDoot = settings.data().countDoot + 1;
+          if (countDoot === 200){countDoot = 2;}
+          t.update(settingsRef, {countDoot: countDoot});
+        });
+        console.log('Doot transaction succeeded');
+      } catch (e) {
+        console.log('Doot transaction failed:', e);
+      }
     let doot = "";
     doot += "d";
-    if (countDoot === 200){countDoot = 2;}
     doot = "d"+"o".repeat(countDoot)+"t";
     return doot;
 };
@@ -41,114 +42,88 @@ const doot = function(){
 //creation of bot
 const dootBot = telegramBot.createBot(token,"/");
 
-//setting commands
-/*
-dootBot.setDefault(function(message){
-    if (dootActive){
-        up+=1;
-        if ((up%up_param == 0)&&(message.chat.id==-1001355626155)){
-            dootBot.sendMessage(message.chat.id,"Up",62776);
-        }
-        else {
-            const text = doot();
-            dootBot.sendMessage(message.chat.id,text);
-        }
-    }
-});
-*/
-
+//fetch the countDoot param, send message and update stats
 dootBot.addCommand("/doot",function(message){
     if (dootActive){
-        const text = doot();
-        dootBot.sendMessage(message.chat.id, text)
-
-        //TODO Save Stats in database
-        /*
-        const queryString = "SELECT * FROM user_stats WHERE bot_id = $1 AND first_name = $2 AND last_name = $3";
-        const values = [1,message.from.first_name,message.from.last_name];
-        pool.query(queryString,values,(err,res) => {
-            if (res.rows.length != 0){
-                const dooted = res.rows[0].dooted;
-                const id = res.rows[0].id;
-                const queryString = "UPDATE user_stats SET dooted = $1 WHERE id = $2";
-                const values = [dooted+1,id];
-                pool.query(queryString,values,(err,res)=>{})
-            }else {
-                const queryString = "INSERT INTO user_stats(bot_id,first_name,last_name,dooted,mastodooted) VALUES($1,$2,$3,$4,$5)";
-                const values = [1,message.from.first_name,message.from.last_name,1,0];
-                pool.query(queryString,values,(err,res)=>{});
+        doot().then(text => dootBot.sendMessage(message.chat.id, text));
+        const statsRef = db.collection('dootbot').doc('stats')
+        const userRef = statsRef.collection('users').doc(String(message.from.id))
+        userRef.get().then((userSnapshot) => {
+            if (userSnapshot.exists) {
+                userRef.update({dooted: FieldValue.increment(1)})
+            } else {
+                userRef.set({
+                    first_name: message.from.first_name,
+                    last_name: message.from.last_name,
+                    username: message.from.username,
+                    dooted: 1,
+                    mastodooted: 0
+                })
             }
         })
-        */
     }
 })
 
+//stop the bot from dooting by updating the dootActive parameter
 dootBot.addCommand("/dootOff",function(message){
     if (message.from.username == "Oz_Obal" || message.from.username == "Dixneuf19"){
-        dootActive = false;
-        console.log("doot Off");
+        dootActive = false
+        db.collection('dootbot').doc('settings').update({dootActive: false}).then(success => console.log("doot Off"))
     }
     else {
         dootBot.defaultCommand(message);
     }
 });
 
+//resume the dooting behavior by updating the dootActive parameter
 dootBot.addCommand("/dootOn",function(message){
     if (message.from.username == "Oz_Obal" || message.from.username == "Dixneuf19"){
         dootActive = true;
-        console.log("doot On");
+        db.collection('dootbot').doc('settings').update({dootActive: true}).then(success => console.log("doot On"))
     }else {
         dootBot.defaultCommand(message);
     }
 });
 
-// TODO Add or remove mastodoot
-/*
+//send mastodoot messages and update the stats
 dootBot.addCommand("/mastoDoot",function(message){
     if (dootActive) {
-        for (let i=0;i<20;i+=1) {
+        for (let i=0;i<5;i+=1) {
             dootBot.sendMessage(message.chat.id,"DOOOOOOOOOOOT !!!!!");
         }
-        const queryString = "SELECT * FROM user_stats WHERE bot_id = $1 AND first_name = $2 AND last_name = $3";
-        const values = [1,message.from.first_name,message.from.last_name];
-        pool.query(queryString,values,(err,res) => {
-            if (res.rows.length != 0){
-                const mastodooted = res.rows[0].mastodooted;
-                const id = res.rows[0].id;
-                const queryString = "UPDATE user_stats SET mastodooted = $1 WHERE id = $2";
-                const values = [mastodooted+1,id];
-                pool.query(queryString,values,(err,res)=>{});
-            }else {
-                const queryString = "INSERT INTO user_stats(bot_id,first_name,last_name,dooted,mastodooted) VALUES($1,$2,$3,$4,$5)";
-                const values = [1,message.from.first_name,message.from.last_name,1,0];
-                pool.query(queryString,values,(err,res)=>{});
+        const statsRef = db.collection('dootbot').doc('stats')
+        const userRef = statsRef.collection('users').doc(String(message.from.id))
+        userRef.get().then((userSnapshot) => {
+            if (userSnapshot.exists) {
+                userRef.update({mastodooted: FieldValue.increment(1)})
+            } else {
+                userRef.set({
+                    first_name: message.from.first_name,
+                    last_name: message.from.last_name,
+                    username: message.from.username,
+                    dooted: 0,
+                    mastodooted: 1
+                })
             }
         })
     }
 })
-*/
 
-//TODO retrieve stats from db and display them
-/*
-dootBot.addCommand("/stats",function(message){
-    const queryString = "SELECT * FROM user_stats ORDER BY dooted DESC LIMIT 3";
-    pool.query(queryString,function(err,res){
-        const results = res.rows;
-        let text = "dooted the most :\n\n";
-        results.forEach(function(row,i){
-            text += `  ${i+1}. ${row.first_name} ${row.last_name} : ${row.dooted}\n`;
-        })
-        const queryString = "SELECT * FROM user_stats ORDER BY mastodooted DESC LIMIT 3";
-        pool.query(queryString,(err,res)=>{
-            const results = res.rows;
-            text += "\nmastodooted the most :\n\n";
-            results.forEach(function(row,i){
-                text += `  ${i+1}. ${row.first_name} ${row.last_name} : ${row.mastodooted}\n`;
-            })
-            dootBot.sendMessage(message.chat.id,text);
-        })
-    });
+//fetch and display stats on the number of doots
+dootBot.addCommand("/stats", async function(message){
+    const usersRef = db.collection('dootbot').doc('stats').collection('users');
+    let snapshots = await usersRef.orderBy('dooted', 'desc').limit(3).get()
+    let text = "dooted the most :\n\n";
+    snapshots.docs.forEach(function(row,i){
+        text += `  ${i+1}. ${row.data().first_name} ${row.data().last_name} : ${row.data().dooted}\n`;
+    })
+    text += "\nmastodooted the most :\n\n";
+    snapshots = await usersRef.orderBy('mastodooted', 'desc').limit(3).get()
+    snapshots.docs.forEach(function(row,i){
+        text += `  ${i+1}. ${row.data().first_name} ${row.data().last_name} : ${row.data().mastodooted}\n`;
+    })
+    dootBot.sendMessage(message.chat.id,text);
 })
-*/
+
 
 exports.processMessage = dootBot.processMessage

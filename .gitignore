@@ -4,3 +4,4 @@ node_modules
 .env
 preferences.json
 .idea
+credentials/
