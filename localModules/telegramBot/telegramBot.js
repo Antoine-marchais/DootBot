@@ -12,13 +12,14 @@ function Command(cmd,callback){
 
 // return commands in message object
 const parseCommand = function(message){
-    const cmd = [];
+    let cmd = null;
     if (message.hasOwnProperty("entities")){
         const len = message.entities.length;
         for (let i = 0;i<len;i+=1){
             let ent = message.entities[i];
             if (ent.type == "bot_command"){
-                cmd.push(message.text.slice(ent.offset,ent.offset+ent.length));
+                cmd = message.text.slice(ent.offset,ent.offset+ent.length);
+                return cmd
             }
         }
     }
@@ -38,20 +39,16 @@ function Bot(token,route){
         if (req.body.hasOwnProperty("message")){
             const message = req.body.message;
             if (message.hasOwnProperty("text")){
-                const parsedCommands = parseCommand(message);
+                const parsedCommand = parseCommand(message);
                 let cmdExists = false;
-                let cmd;
-                for (let j = 0; j < parsedCommands.length; j += 1){
-                    cmd = parsedCommands[j]
-                    for(let i = 0; i < _this.commands.length; i += 1){
-                        if (_this.commands[i].cmd == cmd){
-                            cmdExists = true;
-                            _this.commands[i].callback(message);
-                        }
+                for(let i = 0; i < _this.commands.length; i += 1){
+                    if (_this.commands[i].cmd == parsedCommand){
+                        cmdExists = true;
+                        _this.commands[i].callback(message);
                     }
-                    if (!cmdExists){
-                        _this.defaultCommand(message);
-                    }
+                }
+                if (!cmdExists){
+                    _this.defaultCommand(message);
                 }
             }
         }
